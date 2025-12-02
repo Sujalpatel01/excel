@@ -1,0 +1,5 @@
+{
+  "name": "GridPrint Pro",
+  "description": "A smart Excel-to-Label printing tool that formats house owner details into print-ready A4 layouts (16/page) with optional AI data cleaning.",
+  "requestFramePermissions": []
+}
