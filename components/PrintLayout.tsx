@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { HouseRecord, GridSettings } from '../types';
+import { HouseRecord, GridSettings, PAGE_DIMENSIONS } from '../types';
 import { MapPin, Phone, Map, AlertTriangle } from 'lucide-react';
 
 interface PrintLayoutProps {
@@ -10,9 +10,10 @@ interface PrintLayoutProps {
 
 export const PrintLayout: React.FC<PrintLayoutProps> = ({ records, settings }) => {
   
-  // A4 Dimensions in mm
-  const PAGE_WIDTH_MM = 210;
-  const PAGE_HEIGHT_MM = 297;
+  // Get Current Page Dimensions
+  const pageSizeConfig = PAGE_DIMENSIONS[settings.pageSize] || PAGE_DIMENSIONS['A4'];
+  const PAGE_WIDTH_MM = pageSizeConfig.width;
+  const PAGE_HEIGHT_MM = pageSizeConfig.height;
   const PAGE_MARGIN_MM = 10; // Safe print margin
   
   // Calculate items per page based on mode
@@ -65,7 +66,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ records, settings }) =
         }
       };
     }
-  }, [settings]);
+  }, [settings, PAGE_WIDTH_MM, PAGE_HEIGHT_MM]);
 
   // Pagination
   const pages = useMemo(() => {
@@ -80,12 +81,34 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ records, settings }) =
   return (
     <div className="flex flex-col items-center bg-gray-100 pt-8 pb-20 print:bg-white print:p-0">
       
+      {/* Dynamic Style Injection for Print Dialog */}
+      <style>{`
+        @page {
+            size: ${settings.pageSize};
+            margin: 0;
+        }
+        @media print {
+            body { margin: 0; padding: 0; background: white; }
+            .print-page-base {
+                width: ${PAGE_WIDTH_MM}mm !important;
+                height: ${PAGE_HEIGHT_MM}mm !important;
+                margin: 0 !important;
+                page-break-after: always;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .print-page-base:last-child {
+                page-break-after: auto;
+            }
+        }
+      `}</style>
+
       {/* Warning if items per page is very low in custom mode */}
       {settings.mode === 'size' && itemsPerPage < 4 && (
         <div className="mb-4 bg-yellow-50 text-yellow-800 px-4 py-2 rounded-lg flex items-center gap-2 border border-yellow-200 shadow-sm max-w-lg print:hidden">
           <AlertTriangle className="w-5 h-5 text-yellow-600" />
           <p className="text-sm">
-            <strong>Note:</strong> With size {settings.itemWidth/10}x{settings.itemHeight/10}cm, only {itemsPerPage} label{itemsPerPage !== 1 && 's'} fit per page.
+            <strong>Note:</strong> With size {settings.itemWidth/10}x{settings.itemHeight/10}cm on {settings.pageSize}, only {itemsPerPage} label{itemsPerPage !== 1 && 's'} fit per page.
           </p>
         </div>
       )}
@@ -93,8 +116,14 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ records, settings }) =
       {pages.map((pageRecords, pageIndex) => (
         <div 
           key={pageIndex}
-          className="a4-page-preview a4-page relative box-border bg-white"
-          style={{ padding: `${PAGE_MARGIN_MM}mm` }} 
+          className="print-page-base relative box-border bg-white"
+          style={{ 
+              width: `${PAGE_WIDTH_MM}mm`,
+              height: `${PAGE_HEIGHT_MM}mm`,
+              padding: `${PAGE_MARGIN_MM}mm`,
+              marginBottom: '2rem',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }} 
         >
             {/* Page Content Grid */}
             <div style={gridStyle}>
@@ -168,7 +197,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ records, settings }) =
             </div>
 
             <div className="absolute bottom-1 right-2 text-[10px] text-gray-300 print:hidden">
-                Page {pageIndex + 1} of {pages.length}
+                Page {pageIndex + 1} of {pages.length} ({settings.pageSize})
             </div>
         </div>
       ))}

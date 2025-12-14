@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,8 +14,8 @@
         background-color: #f3f4f6;
       }
 
+      /* Basic Page Defaults - Specific sizes are now handled by PrintLayout.tsx */
       @page {
-        size: A4;
         margin: 0;
       }
 
@@ -28,28 +29,6 @@
         .print-only {
           display: block !important;
         }
-        /* Ensure A4 dimensions are respected strictly during print */
-        .a4-page {
-          width: 210mm;
-          height: 297mm;
-          page-break-after: always;
-          overflow: hidden;
-          background: white;
-        }
-        .a4-page:last-child {
-          page-break-after: auto;
-        }
-      }
-
-      /* Screen preview styles */
-      .a4-page-preview {
-        width: 210mm;
-        height: 297mm;
-        background: white;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        margin-bottom: 2rem;
-        overflow: hidden;
-        transform-origin: top center;
       }
     </style>
   <script type="importmap">

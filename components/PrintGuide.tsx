@@ -53,7 +53,7 @@ export const PrintGuide: React.FC<PrintGuideProps> = ({ isOpen, onClose, onConfi
                 <Check className="w-3 h-3" />
               </div>
               <div>
-                <span className="font-bold text-gray-800">Paper Size:</span> Set to <strong>A4</strong>
+                <span className="font-bold text-gray-800">Paper Size:</span> Ensure it matches your selection in the toolbar.
               </div>
             </li>
             <li className="flex items-start gap-3">

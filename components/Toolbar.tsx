@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { GridSettings } from '../types';
-import { Printer, Wand2, RefreshCcw, LayoutGrid, Ruler, BoxSelect, Type, Palette, Download } from 'lucide-react';
+import { GridSettings, PAGE_DIMENSIONS, PageSize } from '../types';
+import { Printer, Wand2, RefreshCcw, LayoutGrid, Ruler, BoxSelect, Type, Palette, Download, FileText } from 'lucide-react';
 
 interface ToolbarProps {
   settings: GridSettings;
@@ -56,6 +56,23 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
           <div className="flex flex-wrap items-center gap-4 xl:gap-6">
             
+            {/* Page Size Selector */}
+            <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Paper Size</label>
+                <div className="relative">
+                    <select
+                        value={settings.pageSize}
+                        onChange={(e) => setSettings(p => ({ ...p, pageSize: e.target.value as PageSize }))}
+                        className="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 border p-1.5 bg-gray-50 font-medium pl-8 h-[34px] w-32"
+                    >
+                        {Object.entries(PAGE_DIMENSIONS).map(([key, config]) => (
+                            <option key={key} value={key}>{key}</option>
+                        ))}
+                    </select>
+                    <FileText className="w-4 h-4 text-gray-500 absolute left-2.5 top-2.5 pointer-events-none" />
+                </div>
+            </div>
+
             {/* Mode Switcher */}
             <div className="flex flex-col gap-1">
                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Layout Mode</label>
@@ -80,7 +97,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                         }`}
                     >
                         <Ruler className="w-4 h-4" />
-                        Custom Size
+                        Fixed Size
                     </button>
                 </div>
             </div>
