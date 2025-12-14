@@ -63,10 +63,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                     <select
                         value={settings.pageSize}
                         onChange={(e) => setSettings(p => ({ ...p, pageSize: e.target.value as PageSize }))}
-                        className="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 border p-1.5 bg-gray-50 font-medium pl-8 h-[34px] w-32"
+                        className="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 border p-1.5 bg-gray-50 font-medium pl-8 h-[34px] w-48"
                     >
                         {Object.entries(PAGE_DIMENSIONS).map(([key, config]) => (
-                            <option key={key} value={key}>{key}</option>
+                            <option key={key} value={key}>{config.name}</option>
                         ))}
                     </select>
                     <FileText className="w-4 h-4 text-gray-500 absolute left-2.5 top-2.5 pointer-events-none" />
